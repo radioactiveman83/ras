@@ -1,0 +1,15 @@
+#################################################
+###Einträge des Hauptmenu
+#################################################
+
+Info [info]
+Einstellungen & Konfiguration [setup]
+Aktualisierungen [update]
+(De-)Installationen [install]
+Starten & Stoppen [start]
+Anpassungen [config]
+Sicherheit [security]
+Prüfungen [checks]
+Monitoring [monitoring]
+Backups [backup]
+Scripte [script]
