@@ -1,0 +1,9 @@
+Name: gnupg2
+IP Address: Not applicable
+HTTP/HTTPS Address: Not applicable
+Port: Not applicable
+Login: Not applicable
+Category: Software/Utility
+Function: Various
+Usage: Various
+Description: This file provides details about the gnupg2 installation.

@@ -1,0 +1,9 @@
+Name: sudo
+IP Address: Not applicable
+HTTP/HTTPS Address: Not applicable
+Port: Not applicable
+Login: Not applicable
+Category: Software/Utility
+Function: Various
+Usage: Various
+Description: This file provides details about the sudo installation.
