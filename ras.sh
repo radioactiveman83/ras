@@ -1,11 +1,24 @@
 #!/bin/bash
-
+export RAS_HOME=$(pwd)
 # Prüfen, ob das Skript als Root ausgeführt wird
 if [ "$(id -u)" -ne 0 ]; then
     echo "Bitte führe das Skript als Root oder mit sudo aus."
     exit 1
 fi
-export RAS_HOME=$(pwd)
+# Installation von dos2unix, falls nicht bereits installiert
+if ! command -v dos2unix &>/dev/null; then
+    echo "Installiere dos2unix..."
+    apt-get update && apt-get install -y dos2unix
+fi
+
+# Wurzelverzeichnis, von dem aus alle Dateien konvertiert werden sollen
+root_directory="$RAS_HOME/"
+
+# Anwenden von dos2unix auf jede Datei rekursiv
+find "$root_directory" -type f -exec dos2unix {} + 
+
+echo "Alle Dateien wurden erfolgreich konvertiert."
+
 chmod +x $RAS_HOME/functions/execute_scripts.sh
 ##############################
 # 1. Systemupdate & Bereinigung
