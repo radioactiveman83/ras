@@ -1,0 +1,17 @@
+#######################################
+### Menüeinträge von setup
+#######################################
+
+[sub_menu] Systemeinstellungen:
+	Sprache & Zeitzone ändern [./hauptmenu/script/deutsch_einstellen.sh]
+	Den Hostname ändern [./hauptmenu/script/hostname_aendern.sh]
+[sub_menu] Shell-Tools:
+	ssh-key generieren [./hauptmenu/script/ssh-key_generieren.sh]
+	[sub_menu] fish-shell
+		fish-shell installieren und zur Standard-Shell machen [./hauptmenu/script/apt_install/fish_installieren.sh]
+		fish-shell konfig erstellen [./hauptmenu/script/apt_install/fish_installieren.sh]
+	tmux installieren [./hauptmenu/script/apt_install/tmux_installieren.sh]
+	shellinabox installieren [./hauptmenu/script/apt_install/shellinabox_installieren.sh]
+	[sub_menu] starship: 
+		starship installieren [./hauptmenu/script/apt_install/starship_installieren.sh]
+[main]:

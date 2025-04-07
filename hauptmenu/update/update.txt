@@ -1,0 +1,15 @@
+#######################################
+### Menüeinträge von update
+#######################################
+
+[sub_menu] System:
+	aktualisiere alle Pakete [./hauptmenu/script/apt_update.sh]
+	aktualisiere ssh-keys [./hauptmenu/script/ssh-key_update.sh]
+	aktualisiere vorhandene https-Zertifikate [./hauptmenu/script/renew_https_cert.sh] 
+[sub_menu] Docker:
+	.yaml Vorlagen updaten, erstellen und analysieren [./hauptmenu/script/get_docker-compose_yaml.sh] 
+	Zeige den gesamten und den belegten RAM des System an [./hauptmenu/script/ram_usage_anzeigen.sh]
+	Zeige die aktuelle, durschnittliche und max cpu auslastung [./hauptmenu/script/cpu_usage_anzeigen.sh]
+	[sub_menu] CPU: Zeige Prozessor-Typ/Daten an [./hauptmenu/script/cpu_typ_anzeigen.sh]
+[main]:
+Prüfe Firewall Ports [./hauptmenu/script/ufw_port_check.sh]

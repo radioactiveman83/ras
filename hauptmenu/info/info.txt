@@ -1,0 +1,14 @@
+#######################################
+### Menüeinträge von info
+#######################################
+
+[sub_menu] Netzwerk:
+	Zeige die IP-Adresse des Netzwerkadaperts an [./hauptmenu/script/ip_anzeigen.sh]
+	Zeige den Hostname an [./hauptmenu/script/hostname_anzeigen.sh]
+[sub_menu] Hardware:
+	Zeige den gesamten und den belegten Speicherplatz der Systempartion an [./hauptmenu/script/speicherplatz_anzeigen.sh]
+	Zeige den gesamten und den belegten RAM des System an [./hauptmenu/script/ram_usage_anzeigen.sh]
+	Zeige die aktuelle, durschnittliche und max cpu auslastung [./hauptmenu/script/cpu_usage_anzeigen.sh]
+	[sub_menu] CPU: Zeige Prozessor-Typ/Daten an [./hauptmenu/script/cpu_typ_anzeigen.sh]
+[main]:
+Zeige die Uptime des Systems an [./hauptmenu/script/uptime_anzeigen.sh]
