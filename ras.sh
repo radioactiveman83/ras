@@ -5,7 +5,8 @@ if [ "$(id -u)" -ne 0 ]; then
     echo "Bitte führe das Skript als Root oder mit sudo aus."
     exit 1
 fi
-chmod +x /functions/execute_scripts.sh
+export RAS_HOME=$(pwd)
+chmod +x $RAS_HOME/functions/execute_scripts.sh
 ##############################
 # 1. Systemupdate & Bereinigung
 ##############################
@@ -13,7 +14,8 @@ apt update -y
 apt upgrade -y
 apt autoremove -y
 apt clean -y
-/functions/execute_scripts.sh
+$RAS_HOME/functions/execute_scripts.sh
+MENU_DIR="hauptmenu"
 ##############################
 # 2. Systemerweiterung und Installation
 ##############################
@@ -21,21 +23,21 @@ apt clean -y
 # 2a. System für systemctl (Services) erweitern
 if ! command -v systemctl &>/dev/null; then
     echo "systemctl nicht gefunden. Versuche, systemd zu installieren..."
-    /hauptmenu/script/apt_install/systemd_installieren.sh
+    $RAS_HOME/hauptmenu/script/apt_install/systemd_installieren.sh
 fi
 
 # 2b. Installation der nötigen Pakete
-/hauptmenu/script/apt_install/git_installieren.sh
-/hauptmenu/script/apt_install/curl_installieren.sh
-/hauptmenu/script/apt_install/wget_installieren.sh
-/hauptmenu/script/apt_install/apt-transport-https_installieren.sh
-/hauptmenu/script/apt_install/sudo_installieren.sh
-/hauptmenu/script/apt_install/bash_installieren.sh
-/hauptmenu/script/apt_install/python3_installieren.sh
-/hauptmenu/script/apt_install/unzip_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/git_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/curl_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/wget_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/apt-transport-https_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/sudo_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/bash_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/python3_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/unzip_installieren.sh
 
 # 2c. hishtory-server installieren und starten
-/hauptmenu/script/apt_install/hishtory-server_installieren.sh
+$RAS_HOME/hauptmenu/script/apt_install/hishtory-server_installieren.sh
 
 ##############################
 # 3. Installation und Vorbereitung von whiptail
@@ -46,32 +48,32 @@ apt install -y whiptail
 # 4. Erstellung der Hauptmenü-Ordner und weiterer Verzeichnisse
 ##############################
 MENU_DIR="hauptmenu"
-mkdir -p "$MENU_DIR"
-mkdir -p "$MENU_DIR/inactive"  # Ordner für inaktive (auskommentierte) Menüpunkte
+mkdir -p $RAS_HOME/"$MENU_DIR"
+mkdir -p $RAS_HOME/"$MENU_DIR/inactive"  # Ordner für inaktive (auskommentierte) Menüpunkte
 
 # Zusätzliche Verzeichnisse für Variablen, Dokumente, Dateien, Funktionen, Libraries und Logs
 VAR_DIR="variables"
-mkdir -p "$VAR_DIR"
+mkdir -p $RAS_HOME/"$VAR_DIR"
 DOCS_DIR="docs"
-mkdir -p "$DOCS_DIR"
+mkdir -p $RAS_HOME/"$DOCS_DIR"
 FILES_DIR="files"
-mkdir -p "$FILES_DIR"
+mkdir -p $RAS_HOME/"$FILES_DIR"
 FUNC_DIR="functions"
-mkdir -p "$FUNC_DIR"
+mkdir -p $RAS_HOME/"$FUNC_DIR"
 LIB_DIR="libaries"
-mkdir -p "$LIB_DIR"
+mkdir -p $RAS_HOME/"$LIB_DIR"
 LOG_DIR="logs"
-mkdir -p "$LOG_DIR"
+mkdir -p $RAS_HOME/"$LOG_DIR"
 readonly SLEEP_TIME=5
 
 # Quelle der Funktion zum Exportieren der Variablen (s. export_variables.sh)
-source ./export_variables.sh
+source $RAS_HOME/functions/export_variables.sh
 export_all_variables
 
 ##############################
 # 5. Erstellung der hauptmenu.txt (ohne Nummerierung)
 ##############################
-cat <<'EOF' > "$MENU_DIR/hauptmenu.txt"
+cat <<'EOF' > $RAS_HOME/"$MENU_DIR/hauptmenu.txt"
 Info [info]
 Einstellungen & Konfiguration [setup]
 Aktualisierungen [update]
@@ -101,21 +103,21 @@ while IFS= read -r line || [ -n "$line" ]; do
         # Stelle sicher, dass die Zeile wieder auskommentiert wird (in der Variablen)
         line="#${uncommented_line}"
         # Erstelle bzw. sichere den Unterordner im "inactive"-Verzeichnis
-        mkdir -p "$MENU_DIR/inactive/$folder"
+        mkdir -p $RAS_HOME/"$MENU_DIR/inactive/$folder"
         # Erstelle die .txt-Datei nur, falls sie noch nicht existiert
-        if [ ! -f "$MENU_DIR/inactive/$folder/$folder.txt" ]; then
-            mkdir -p "$MENU_DIR/inactive/$folder"
-            touch "$MENU_DIR/inactive/$folder/$folder.txt"
+        if [ ! -f $RAS_HOME/"$MENU_DIR/inactive/$folder/$folder.txt" ]; then
+            mkdir -p $RAS_HOME/"$MENU_DIR/inactive/$folder"
+            touch $RAS_HOME/"$MENU_DIR/inactive/$folder/$folder.txt"
         fi
     else
         folder=$(echo "$line" | grep -oP '\[\K[^\]]+')
         # Prüfe, ob der Ordner bereits im Inactive-Verzeichnis existiert und verschiebe ihn
-        if [ -d "$MENU_DIR/inactive/$folder" ]; then
+        if [ -d $RAS_HOME/"$MENU_DIR/inactive/$folder" ]; then
             mv "$MENU_DIR/inactive/$folder" "$MENU_DIR/"
         fi
-        mkdir -p "$MENU_DIR/$folder"
-        if [ ! -f "$MENU_DIR/$folder/$folder.txt" ]; then
-            touch "$MENU_DIR/$folder/$folder.txt"
+        mkdir -p $RAS_HOME/"$MENU_DIR/$folder"
+        if [ ! -f $RAS_HOME/"$MENU_DIR/$folder/$folder.txt" ]; then
+            touch $RAS_HOME/"$MENU_DIR/$folder/$folder.txt"
         fi
     fi
 done < "$MENU_DIR/hauptmenu.txt"
@@ -124,20 +126,20 @@ done < "$MENU_DIR/hauptmenu.txt"
 # 7. Rechte für sudo-Benutzer setzen
 ##############################
 # Gruppeneigentümer aller erstellten Dateien und Ordner auf "sudo" setzen
-chown -R root:sudo "$MENU_DIR" "$VAR_DIR" "$DOCS_DIR" "$FILES_DIR" "$FUNC_DIR" "$LIB_DIR" "$LOG_DIR"
+chown -R root:sudo $RAS_HOME/"$MENU_DIR" $RAS_HOME/"$VAR_DIR" $RAS_HOME/"$DOCS_DIR" $RAS_HOME/"$FILES_DIR" $RAS_HOME/"$FUNC_DIR" $RAS_HOME/"$LIB_DIR" $RAS_HOME/"$LOG_DIR"
 # Für alle Verzeichnisse: 2775 (Lesen, Schreiben, Ausführen; neue Dateien erben Gruppen-ID)
-find "$MENU_DIR" "$VAR_DIR" "$DOCS_DIR" "$FILES_DIR" "$FUNC_DIR" "$LIB_DIR" "$LOG_DIR" -type d -exec chmod 2775 {} \;
+find $RAS_HOME/"$MENU_DIR" $RAS_HOME/"$VAR_DIR" $RAS_HOME/"$DOCS_DIR" $RAS_HOME/"$FILES_DIR" $RAS_HOME/"$FUNC_DIR" $RAS_HOME/"$LIB_DIR" $RAS_HOME/"$LOG_DIR" -type d -exec chmod 2775 {} \;
 # Für alle Dateien: 664 (Lesen, Schreiben für Besitzer und Gruppe; Lesen für Andere)
-find "$MENU_DIR" "$VAR_DIR" "$DOCS_DIR" "$FILES_DIR" "$FUNC_DIR" "$LIB_DIR" "$LOG_DIR" -type f -exec chmod 664 {} \;
+find $RAS_HOME/"$MENU_DIR" $RAS_HOME/"$VAR_DIR" $RAS_HOME/"$DOCS_DIR" $RAS_HOME/"$FILES_DIR" $RAS_HOME/"$FUNC_DIR" $RAS_HOME/"$LIB_DIR" $RAS_HOME/"$LOG_DIR" -type f -exec chmod 664 {} \;
 
 ##############################
 # 8. Aufruf des interaktiven Menüs (menu.sh)
 ##############################
-# Das interaktive Menü befindet sich in ./hauptmenu/menu.sh
-if [ -x "$MENU_DIR/menu.sh" ]; then
-    "$MENU_DIR/menu.sh"
+# Das interaktive Menü befindet sich in $RAS_HOME/hauptmenu/menu.sh
+if [ -x $RAS_HOME/"$MENU_DIR/menu.sh" ]; then
+    $RAS_HOME/"$MENU_DIR/menu.sh"
 else
-    bash "$MENU_DIR/menu.sh"
+    bash $RAS_HOME/"$MENU_DIR/menu.sh"
 fi
 
 exit 0
